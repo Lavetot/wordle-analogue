@@ -37,8 +37,10 @@
             // 
             WordTextBox.Location = new Point(127, 114);
             WordTextBox.Name = "WordTextBox";
+            WordTextBox.PasswordChar = '*';
             WordTextBox.Size = new Size(329, 27);
             WordTextBox.TabIndex = 0;
+            WordTextBox.KeyPress += WordTextBox_KeyPress;
             // 
             // button1
             // 
@@ -68,7 +70,8 @@
             Controls.Add(button1);
             Controls.Add(WordTextBox);
             Name = "Form1";
-            Text = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Загадывание слова";
             ResumeLayout(false);
             PerformLayout();
         }
