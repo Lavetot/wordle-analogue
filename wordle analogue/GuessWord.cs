@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace wordle_analogue
@@ -12,18 +13,30 @@ namespace wordle_analogue
         // Метод для сравнения загаданного слова и некоторого слова
         public static Color[]? ColorsForChars(string guessedWord)
         {
+            List<char> WordChars = Word.ToList();
+            List<char> guessedWordChars = guessedWord.ToList();
             // Если длина некоторого слова совпадает с длиной загаданного слова
             if (guessedWord.Length == Word.Length)
             {
                 Color[] colors = new Color[Word.Length];    // Массив цветов с длиной, равной длине загаданного слова
                 for (int i = 0; i < Word.Length; i++)       // Цикл, в котором происходит сравнение слов
                 {
-                    if (guessedWord[i] == Word[i])          // Если буква на своем месте (позиция буквы в загаданном слове совпадает с позицией буквы в некотором слове)
-                        colors[i] = Color.LightGreen;       // Присваиваем светло-зеленый цвет
-                    else if (Word.Contains(guessedWord[i])) // Если буква содержится в слове, но не находится на своем месте
-                        colors[i] = Color.Yellow;           // Присваиваем желтый цвет
-                    else                                    // Если буквы нет в слове
-                        colors[i] = Color.Gray;             // Присваиваем серый цвет
+                    colors[i] = Color.Gray;
+                    if (guessedWord[i] == Word[i])
+                    {
+                        colors[i] = Color.LightGreen;
+                        WordChars[i] = ' ';
+                        guessedWordChars[i] = ' ';
+                    }    
+                }
+                for (int i = 0; i < Word.Length; i++)
+                {
+                    int index = WordChars.IndexOf(guessedWordChars[i]);
+                    if (index != -1 && guessedWordChars[i] != ' ' && colors[i] != Color.LightGreen)
+                    {
+                        colors[i] = Color.Yellow;
+                        WordChars[index] = ' ';
+                    }
                 }
                 return colors;                              // Возвращаем массив
             }

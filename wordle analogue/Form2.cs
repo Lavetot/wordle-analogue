@@ -20,6 +20,10 @@ namespace wordle_analogue
         private Color[] colors;
         private int grid_param;
         private Bitmap buffer;
+        private Bitmap alphabetBuffer;
+        private Image AlphabetImage;
+        private Dictionary<char, AlphabetLetter> alphabetLetters;
+        private string alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя012";
         public Form2()
         {
             Directory.CreateDirectory("last_game"); // Создаем директорию last_game, если ее еще не было
@@ -27,11 +31,20 @@ namespace wordle_analogue
             offset = 50; // Задаем оффсет для создания расстояния между квадратами
             grid_param = 0; // Параметр для отрисовки квадратов ниже
             pictureBox1.Paint += pictureBox1_Paint;
+            AlphabetPicture.Paint += AlphabetPicture_Paint;
             buffer = new Bitmap(pictureBox1.Width, pictureBox1.Height); // Буфер для сохранения отрисованных квадратов
+            alphabetBuffer = new Bitmap(AlphabetPicture.Width, AlphabetPicture.Height);
+            AlphabetImage = AlphabetPicture.Image;
+            alphabetLetters = new Dictionary<char, AlphabetLetter>();
+            foreach (var letter in alphabet)
+            {
+                alphabetLetters.Add(letter, new AlphabetLetter(letter));
+            }
+            InitLetters();
         }
 
         // Метод для обновления буффера
-        private void UpdateBuffer() 
+        private void UpdateBuffer()
         {
             using (Graphics g = Graphics.FromImage(buffer))
             {
@@ -60,6 +73,45 @@ namespace wordle_analogue
             }
         }
 
+        private void InitLetters()
+        {
+            int columns = 6;               // количество столбцов
+            float cellWidth = AlphabetPicture.Width / columns;
+            float cellHeight = AlphabetPicture.Height / columns; // если сетка квадратная, иначе отдельно
+
+            int index = 0;
+            foreach (var letter in alphabetLetters.Values)
+            {
+                int col = index % columns;
+                int row = index / columns;
+
+                letter.X = col * cellWidth;
+                letter.Y = row * cellHeight;
+
+                index++;
+            }
+        }
+        private void UpdateAlphabetBuffer()
+        {
+            using (Graphics g = Graphics.FromImage(alphabetBuffer))
+            {
+                var brush = new SolidBrush(Color.Transparent);
+                List<char> alphabetChars = alphabetLetters.Keys.ToList();
+                if (colors != null)
+                {
+                    var X = AlphabetPicture.Width / 6;
+                    var Y = AlphabetPicture.Height / 6;
+                    for (int i = 0; i < colors.Length; i++)
+                    {
+                        var index = alphabetChars.IndexOf(guessedWord[i]);
+                        alphabetLetters[alphabetChars[index]].Color = colors[i];
+                        brush.Color = colors[i];
+                        g.FillRectangle(brush, (float)alphabetLetters[alphabetChars[index]].X, (float)alphabetLetters[alphabetChars[index]].Y, X, Y);
+                    }
+                }
+            }
+        }
+
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             if (buffer != null) // Проверка на то, что буфер непустой
@@ -72,11 +124,7 @@ namespace wordle_analogue
         // Кнопка "Отправить" (можно нажимать энтер для отправки)
         private void button1_Click(object sender, EventArgs e)
         {
-            guessedWord = textBox1.Text.ToLower(); // Получаем слово и приводим его в нижний регистр
-            colors = GuessWord.ColorsForChars(guessedWord); // Узнаем, насколько оно соответствует загаданному слову
-            UpdateBuffer(); // Обновляем буфер
-            pictureBox1.Refresh(); // Обновляем pictureBox
-            grid_param++; // Прибавляем grid_param (перемещаемся вниз)
+            Updater();
         }
 
         // Переписанный метод закрытия формы
@@ -88,6 +136,7 @@ namespace wordle_analogue
                                                                        // чтобы можно было сохранить картинку
             buffer.Save($"last_game/{now}.png"); // Сохраняем картинку
             buffer?.Dispose(); // Избавляеся от буфера
+            alphabetBuffer?.Dispose();
             base.OnFormClosing(e);
         }
 
@@ -99,12 +148,28 @@ namespace wordle_analogue
             {
                 // Все то же самое, что и в кнопке "Отправить"
                 e.Handled = true; // Убираем системный звук нажатия кнопки
-                guessedWord = textBox1.Text.ToLower(); // Получаем слово и приводим его в нижний регистр
-                colors = GuessWord.ColorsForChars(guessedWord); // Узнаем, насколько оно соответствует загаданному слову
-                UpdateBuffer(); // Обновляем буфер
-                pictureBox1.Refresh(); // Обновляем pictureBox
-                grid_param++; // Прибавляем grid_param (перемещаемся вниз)
+                Updater();
             }
+        }
+
+        private void AlphabetPicture_Paint(object sender, PaintEventArgs e)
+        {
+            if (alphabetBuffer != null)
+            {
+                e.Graphics.DrawImage(alphabetBuffer, 0, 0);
+                e.Graphics.DrawImage(AlphabetImage, 0, 0);
+            }
+        }
+        private void Updater()
+        {
+            guessedWord = textBox1.Text.ToLower(); // Получаем слово и приводим его в нижний регистр
+            textBox1.Text = "";
+            colors = GuessWord.ColorsForChars(guessedWord); // Узнаем, насколько оно соответствует загаданному слову
+            UpdateBuffer(); // Обновляем буфер
+            UpdateAlphabetBuffer();
+            pictureBox1.Refresh(); // Обновляем pictureBox
+            AlphabetPicture.Refresh();
+            grid_param++; // Прибавляем grid_param (перемещаемся вниз)
         }
     }
 }
