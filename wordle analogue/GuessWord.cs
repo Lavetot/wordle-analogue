@@ -13,32 +13,33 @@ namespace wordle_analogue
         // Метод для сравнения загаданного слова и некоторого слова
         public static Color[]? ColorsForChars(string guessedWord)
         {
-            List<char> WordChars = Word.ToList();
-            List<char> guessedWordChars = guessedWord.ToList();
+            List<char> WordChars = Word.ToList(); // Список с символами из загаданного слова
+            List<char> guessedWordChars = guessedWord.ToList(); // Список с символами из вписанного слова
             // Если длина некоторого слова совпадает с длиной загаданного слова
             if (guessedWord.Length == Word.Length)
             {
                 Color[] colors = new Color[Word.Length];    // Массив цветов с длиной, равной длине загаданного слова
-                for (int i = 0; i < Word.Length; i++)       // Цикл, в котором происходит сравнение слов
+                for (int i = 0; i < Word.Length; i++)       // Цикл, в котором происходит побуквенное сравнение слов
                 {
-                    colors[i] = Color.Gray;
-                    if (guessedWord[i] == Word[i])
+                    colors[i] = Color.Gray; // Изначально присваиваем букве серый цвет
+                    if (guessedWord[i] == Word[i]) // Если буквы совпадают
                     {
-                        colors[i] = Color.LightGreen;
-                        WordChars[i] = ' ';
+                        colors[i] = Color.LightGreen; // Присваиваем светло-зеленый цвет
+                        WordChars[i] = ' '; // Убираем букву из списков с символами
                         guessedWordChars[i] = ' ';
                     }    
                 }
+                // Цикл для определения желтого цвета у букв
                 for (int i = 0; i < Word.Length; i++)
                 {
-                    int index = WordChars.IndexOf(guessedWordChars[i]);
-                    if (index != -1 && guessedWordChars[i] != ' ' && colors[i] != Color.LightGreen)
+                    int index = WordChars.IndexOf(guessedWordChars[i]); // Индекс соответствующей буквы из вписанного слова у загаданного слова
+                    if (index != -1 && guessedWordChars[i] != ' ' && colors[i] != Color.LightGreen) // Проверяем, существует ли буква в двух словах, и что ее цвет не светло-зеленый
                     {
-                        colors[i] = Color.Yellow;
-                        WordChars[index] = ' ';
+                        colors[i] = Color.Yellow; // Если да, то присваиваем букве желтый цвет
+                        WordChars[index] = ' ';   // и обнуляем ее
                     }
                 }
-                return colors;                              // Возвращаем массив
+                return colors; // Возвращаем массив
             }
             // Если длина некоторого слова не совпадает с длиной загаданного слова
             else

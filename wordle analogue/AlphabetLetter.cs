@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace wordle_analogue
 {
+    // Класс для буквы
     public class AlphabetLetter
     {
-        public char letter;
-        public Color Color;
-        public double X;
-        public double Y;
+        public char letter; // Символ, который соответствует букве
+        public Color Color; // Цвет буквы (светло-зеленый, желтый, серый)
+        public double X; // X-координата буквы на изображении
+        public double Y; // Y-координата буквы на сетке
 
         public AlphabetLetter(char letter, double x, double y)
         {

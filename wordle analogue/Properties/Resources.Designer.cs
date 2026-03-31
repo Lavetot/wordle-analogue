@@ -59,5 +59,15 @@ namespace wordle_analogue.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap alphabet_resized {
+            get {
+                object obj = ResourceManager.GetObject("alphabet_resized", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

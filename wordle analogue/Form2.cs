@@ -30,17 +30,16 @@ namespace wordle_analogue
             InitializeComponent();
             offset = 50; // Задаем оффсет для создания расстояния между квадратами
             grid_param = 0; // Параметр для отрисовки квадратов ниже
+
             pictureBox1.Paint += pictureBox1_Paint;
             AlphabetPicture.Paint += AlphabetPicture_Paint;
+
             buffer = new Bitmap(pictureBox1.Width, pictureBox1.Height); // Буфер для сохранения отрисованных квадратов
-            alphabetBuffer = new Bitmap(AlphabetPicture.Width, AlphabetPicture.Height);
-            AlphabetImage = AlphabetPicture.Image;
-            alphabetLetters = new Dictionary<char, AlphabetLetter>();
-            foreach (var letter in alphabet)
-            {
-                alphabetLetters.Add(letter, new AlphabetLetter(letter));
-            }
-            InitLetters();
+            alphabetBuffer = new Bitmap(AlphabetPicture.Width, AlphabetPicture.Height); // Буфер для сохранения отрисованных под буквами алфавита цветов
+            AlphabetImage = new Bitmap(AlphabetPicture.Image); // Копируем изображение алфавита с формы
+
+            alphabetLetters = new Dictionary<char, AlphabetLetter>(); // Инициализируем словарь букв из алфавита
+            InitLetters(); // Инициализируем буквы (даем им символы и координаты)
         }
 
         // Метод для обновления буффера
@@ -73,40 +72,48 @@ namespace wordle_analogue
             }
         }
 
+        // Метод для инициализации
+        // Метод дает каждой букве определенный символ и значение координат (левый верхний угол квадрата)
         private void InitLetters()
         {
-            int columns = 6;               // количество столбцов
-            float cellWidth = AlphabetPicture.Width / columns;
-            float cellHeight = AlphabetPicture.Height / columns; // если сетка квадратная, иначе отдельно
+            foreach (var letter in alphabet)
+            {
+                alphabetLetters.Add(letter, new AlphabetLetter(letter)); // Добавляем буквы в словарь
+            }
+            int columns = 6; // Количество столбцов
+            float cellWidth = AlphabetPicture.Width / columns; // Ширина квадрата сетки
+            float cellHeight = AlphabetPicture.Height / columns; // Высота квадрата сетки
 
-            int index = 0;
+            int index = 0; // Индекс буквы
             foreach (var letter in alphabetLetters.Values)
             {
-                int col = index % columns;
-                int row = index / columns;
+                int col = index % columns; // Столбец
+                int row = index / columns; // Строка
 
-                letter.X = col * cellWidth;
+                letter.X = col * cellWidth; // Даем координаты соответствующей букве
                 letter.Y = row * cellHeight;
 
                 index++;
             }
         }
+
+        // Метод для обновления буфера алфавита
         private void UpdateAlphabetBuffer()
         {
             using (Graphics g = Graphics.FromImage(alphabetBuffer))
             {
-                var brush = new SolidBrush(Color.Transparent);
-                List<char> alphabetChars = alphabetLetters.Keys.ToList();
+                var brush = new SolidBrush(Color.Transparent); // По умолчанию делаем brush прозрачным
+                List<char> alphabetChars = alphabetLetters.Keys.ToList(); // Выделяем символы из словаря букв
                 if (colors != null)
                 {
-                    var X = AlphabetPicture.Width / 6;
-                    var Y = AlphabetPicture.Height / 6;
+                    var X = AlphabetPicture.Width / 6; // Координата X квадрата сетки
+                    var Y = AlphabetPicture.Height / 6; // Координата Y квадрата сетки
                     for (int i = 0; i < colors.Length; i++)
                     {
-                        var index = alphabetChars.IndexOf(guessedWord[i]);
-                        alphabetLetters[alphabetChars[index]].Color = colors[i];
+                        var index = alphabetChars.IndexOf(guessedWord[i]); // Берем индекс буквы из словаря
+                        alphabetLetters[alphabetChars[index]].Color = colors[i]; // Находим соответствующий букве цвет
                         brush.Color = colors[i];
-                        g.FillRectangle(brush, (float)alphabetLetters[alphabetChars[index]].X, (float)alphabetLetters[alphabetChars[index]].Y, X, Y);
+                        g.FillRectangle(brush, (float)alphabetLetters[alphabetChars[index]].X, (float)alphabetLetters[alphabetChars[index]].Y, X, Y); // Отрисовываем квадрат
                     }
                 }
             }
@@ -135,8 +142,14 @@ namespace wordle_analogue
             string now = tempTime.ToString(culture).Replace(':', '-'); // Переводим его в строку, меняем двоеточия на -
                                                                        // чтобы можно было сохранить картинку
             buffer.Save($"last_game/{now}.png"); // Сохраняем картинку
-            buffer?.Dispose(); // Избавляеся от буфера
+            using (Graphics g = Graphics.FromImage(alphabetBuffer))
+            {
+                g.DrawImage(AlphabetImage, 0, 0);
+            }
+            alphabetBuffer.Save($"last_game/{now}-alphabet.png");
+            buffer?.Dispose(); // Избавляеся от буферов
             alphabetBuffer?.Dispose();
+            AlphabetImage?.Dispose();
             base.OnFormClosing(e);
         }
 
@@ -156,10 +169,12 @@ namespace wordle_analogue
         {
             if (alphabetBuffer != null)
             {
-                e.Graphics.DrawImage(alphabetBuffer, 0, 0);
-                e.Graphics.DrawImage(AlphabetImage, 0, 0);
+                e.Graphics.DrawImage(alphabetBuffer, 0, 0); // Рисуем буфер с цветными квадратами
+                e.Graphics.DrawImage(AlphabetImage, 0, 0); // Отрисовываем алфавит поверх квадратов
             }
         }
+
+        // Метод для обновления pictureBox1 и AlphabetPicture 
         private void Updater()
         {
             guessedWord = textBox1.Text.ToLower(); // Получаем слово и приводим его в нижний регистр

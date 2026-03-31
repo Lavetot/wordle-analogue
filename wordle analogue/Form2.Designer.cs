@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             pictureBox1 = new PictureBox();
             textBox1 = new TextBox();
             label1 = new Label();
@@ -81,11 +80,10 @@
             // 
             // AlphabetPicture
             // 
-            AlphabetPicture.Image = (Image)resources.GetObject("AlphabetPicture.Image");
-            AlphabetPicture.Location = new Point(830, 123);
+            AlphabetPicture.Image = Properties.Resources.alphabet_resized;
+            AlphabetPicture.Location = new Point(818, 100);
             AlphabetPicture.Name = "AlphabetPicture";
-            AlphabetPicture.Size = new Size(500, 446);
-            AlphabetPicture.SizeMode = PictureBoxSizeMode.CenterImage;
+            AlphabetPicture.Size = new Size(504, 450);
             AlphabetPicture.TabIndex = 4;
             AlphabetPicture.TabStop = false;
             AlphabetPicture.Paint += AlphabetPicture_Paint;
