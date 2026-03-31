@@ -111,8 +111,17 @@ namespace wordle_analogue
                     for (int i = 0; i < colors.Length; i++)
                     {
                         var index = alphabetChars.IndexOf(guessedWord[i]); // Берем индекс буквы из словаря
-                        alphabetLetters[alphabetChars[index]].Color = colors[i]; // Находим соответствующий букве цвет
-                        brush.Color = colors[i];
+                        var letter_color = alphabetLetters[alphabetChars[index]].Color;
+                        if (colors[i] == Color.LightGreen || (colors[i] == Color.Yellow && (letter_color == Color.Gray || letter_color == Color.Yellow)))
+                        {
+                            letter_color = colors[i]; // Находим соответствующий букве цвет
+                            alphabetLetters[alphabetChars[index]].Color = colors[i];
+                            brush.Color = colors[i];
+                        }
+                        else
+                        {
+                            brush.Color = letter_color;
+                        }
                         g.FillRectangle(brush, (float)alphabetLetters[alphabetChars[index]].X, (float)alphabetLetters[alphabetChars[index]].Y, X, Y); // Отрисовываем квадрат
                     }
                 }

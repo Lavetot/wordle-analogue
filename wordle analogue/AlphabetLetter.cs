@@ -17,7 +17,7 @@ namespace wordle_analogue
         public AlphabetLetter(char letter, double x, double y)
         {
             this.letter = letter;
-            Color = Color.Transparent;
+            Color = Color.Gray;
             X = x;
             Y = y;
         }
@@ -33,7 +33,7 @@ namespace wordle_analogue
         public AlphabetLetter(char letter)
         {
             this.letter = letter;
-            Color = Color.Transparent;
+            Color = Color.Gray;
         }
     }
 }
