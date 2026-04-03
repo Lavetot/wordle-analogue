@@ -9,6 +9,7 @@ namespace wordle_analogue
     public static class GuessWord
     {
         public static string Word; // Поле Word, в которое мы сохраняем загаданное слово с первой формы
+        public static readonly List<string> Dict = File.ReadLines("dictionary_utf-8.txt").ToList();
 
         // Метод для сравнения загаданного слова и некоторого слова
         public static Color[]? ColorsForChars(string guessedWord)
@@ -44,7 +45,7 @@ namespace wordle_analogue
             // Если длина некоторого слова не совпадает с длиной загаданного слова
             else
             {
-                throw new ArgumentOutOfRangeException("Длина вписанного слова не равна длине загаданного слова"); // Выкидываем сообщение об ошибке
+                MessageBox.Show("Длина вписанного слова не равна длине загаданного слова");
                 return null; // Возвращаем null
             }
         }

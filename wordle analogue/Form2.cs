@@ -50,8 +50,8 @@ namespace wordle_analogue
                 var brush = new SolidBrush(Color.Gray); // Создаем brush
                 if (colors != null) // Проверяем, что colors непустой
                 {
-                    var X = pictureBox1.Width / colors.Length; // базовая X-координата квадрата
-                    var Y = pictureBox1.Height / colors.Length / 2; // базовая Y-координата квадрата (делим на 2, чтобы квадраты нормально располагались)
+                    var X = (float)pictureBox1.Width / colors.Length; // базовая X-координата квадрата
+                    var Y = (float)pictureBox1.Height / (colors.Length + 1) / 2; // базовая Y-координата квадрата (делим на 2, чтобы квадраты нормально располагались)
                     using (Font font = new Font("Arial", 40, FontStyle.Bold)) // Задаем шрифт для текста в квадратах
                     using (StringFormat sf = new StringFormat())
                     {
@@ -131,10 +131,7 @@ namespace wordle_analogue
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             if (buffer != null) // Проверка на то, что буфер непустой
-            {
                 e.Graphics.DrawImage(buffer, 0, 0); // Отрисовываем буфер 
-            }
-
         }
 
         // Кнопка "Отправить" (можно нажимать энтер для отправки)
@@ -187,13 +184,20 @@ namespace wordle_analogue
         private void Updater()
         {
             guessedWord = textBox1.Text.ToLower(); // Получаем слово и приводим его в нижний регистр
-            textBox1.Text = "";
-            colors = GuessWord.ColorsForChars(guessedWord); // Узнаем, насколько оно соответствует загаданному слову
-            UpdateBuffer(); // Обновляем буфер
-            UpdateAlphabetBuffer();
-            pictureBox1.Refresh(); // Обновляем pictureBox
-            AlphabetPicture.Refresh();
-            grid_param++; // Прибавляем grid_param (перемещаемся вниз)
+            textBox1.Clear();
+            if (GuessWord.Dict.Contains(guessedWord))
+            {
+                colors = GuessWord.ColorsForChars(guessedWord); // Узнаем, насколько оно соответствует загаданному слову
+                UpdateBuffer(); // Обновляем буфер
+                UpdateAlphabetBuffer();
+                pictureBox1.Refresh(); // Обновляем pictureBox
+                AlphabetPicture.Refresh();
+                grid_param++; // Прибавляем grid_param (перемещаемся вниз)
+            }
+            else
+            {
+                MessageBox.Show("Данного слова нет в словаре");
+            }
         }
     }
 }

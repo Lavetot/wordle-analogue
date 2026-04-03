@@ -49,7 +49,6 @@
             // 
             // textBox1
             // 
-            textBox1.Anchor = AnchorStyles.Bottom;
             textBox1.Location = new Point(818, 32);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(150, 27);
@@ -58,7 +57,6 @@
             // 
             // label1
             // 
-            label1.Anchor = AnchorStyles.Bottom;
             label1.AutoSize = true;
             label1.Location = new Point(830, 9);
             label1.Name = "label1";
@@ -68,7 +66,6 @@
             // 
             // button1
             // 
-            button1.Anchor = AnchorStyles.Bottom;
             button1.Location = new Point(846, 65);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
