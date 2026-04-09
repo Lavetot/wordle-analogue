@@ -10,6 +10,7 @@ namespace wordle_analogue
     {
         public static string Word; // Поле Word, в которое мы сохраняем загаданное слово с первой формы
         public static readonly List<string> Dict = File.ReadLines("dictionary_utf-8.txt").ToList();
+        public static readonly List<string> Dict_5_6 = File.ReadLines("dictionary_5-6_utf-8.txt").ToList();
 
         // Метод для сравнения загаданного слова и некоторого слова
         public static Color[]? ColorsForChars(string guessedWord)
@@ -48,6 +49,12 @@ namespace wordle_analogue
                 MessageBox.Show("Длина вписанного слова не равна длине загаданного слова");
                 return null; // Возвращаем null
             }
+        }
+
+        public static void PickRandomWord()
+        {
+            Random random = new Random();
+            Word = Dict_5_6[random.Next(0, Dict_5_6.Count)];
         }
     }
 }

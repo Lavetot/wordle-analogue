@@ -33,6 +33,7 @@
             label1 = new Label();
             button1 = new Button();
             AlphabetPicture = new PictureBox();
+            WordLength = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)AlphabetPicture).BeginInit();
             SuspendLayout();
@@ -85,11 +86,20 @@
             AlphabetPicture.TabStop = false;
             AlphabetPicture.Paint += AlphabetPicture_Paint;
             // 
+            // WordLength
+            // 
+            WordLength.AutoSize = true;
+            WordLength.Location = new Point(818, 573);
+            WordLength.Name = "WordLength";
+            WordLength.Size = new Size(0, 20);
+            WordLength.TabIndex = 5;
+            // 
             // Form2
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1355, 842);
+            Controls.Add(WordLength);
             Controls.Add(AlphabetPicture);
             Controls.Add(button1);
             Controls.Add(label1);
@@ -111,5 +121,6 @@
         private Label label1;
         private Button button1;
         private PictureBox AlphabetPicture;
+        private Label WordLength;
     }
 }

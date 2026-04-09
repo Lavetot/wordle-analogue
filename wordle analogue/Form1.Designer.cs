@@ -31,6 +31,7 @@
             WordTextBox = new TextBox();
             button1 = new Button();
             label1 = new Label();
+            PickRandomWordButton = new Button();
             SuspendLayout();
             // 
             // WordTextBox
@@ -61,11 +62,22 @@
             label1.TabIndex = 2;
             label1.Text = "Введите слово";
             // 
+            // PickRandomWordButton
+            // 
+            PickRandomWordButton.Location = new Point(127, 224);
+            PickRandomWordButton.Name = "PickRandomWordButton";
+            PickRandomWordButton.Size = new Size(329, 29);
+            PickRandomWordButton.TabIndex = 3;
+            PickRandomWordButton.Text = "Выбрать случайное слово из словаря";
+            PickRandomWordButton.UseVisualStyleBackColor = true;
+            PickRandomWordButton.Click += PickRandomWordButton_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(575, 265);
+            Controls.Add(PickRandomWordButton);
             Controls.Add(label1);
             Controls.Add(button1);
             Controls.Add(WordTextBox);
@@ -81,5 +93,6 @@
         private TextBox WordTextBox;
         private Button button1;
         private Label label1;
+        private Button PickRandomWordButton;
     }
 }

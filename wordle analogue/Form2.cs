@@ -28,6 +28,9 @@ namespace wordle_analogue
         {
             Directory.CreateDirectory("last_game"); // Создаем директорию last_game, если ее еще не было
             InitializeComponent();
+
+            WordLength.Text = $"Длина загаданного слова: {GuessWord.Word.Length}";
+
             offset = 50; // Задаем оффсет для создания расстояния между квадратами
             grid_param = 0; // Параметр для отрисовки квадратов ниже
 
@@ -185,7 +188,7 @@ namespace wordle_analogue
         {
             guessedWord = textBox1.Text.ToLower(); // Получаем слово и приводим его в нижний регистр
             textBox1.Clear();
-            if (GuessWord.Dict.Contains(guessedWord))
+            if (GuessWord.Dict.Contains(guessedWord) && guessedWord.Length == GuessWord.Word.Length)
             {
                 colors = GuessWord.ColorsForChars(guessedWord); // Узнаем, насколько оно соответствует загаданному слову
                 UpdateBuffer(); // Обновляем буфер
@@ -194,10 +197,15 @@ namespace wordle_analogue
                 AlphabetPicture.Refresh();
                 grid_param++; // Прибавляем grid_param (перемещаемся вниз)
             }
+            else if (GuessWord.Dict.Contains(guessedWord) && guessedWord.Length != GuessWord.Word.Length)
+            {
+                MessageBox.Show("Длина загаданного слова не соответствует длине данного слова");
+            }
             else
             {
                 MessageBox.Show("Данного слова нет в словаре");
             }
+            
         }
     }
 }
