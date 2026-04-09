@@ -89,10 +89,11 @@
             // WordLength
             // 
             WordLength.AutoSize = true;
-            WordLength.Location = new Point(818, 573);
+            WordLength.Location = new Point(974, 39);
             WordLength.Name = "WordLength";
-            WordLength.Size = new Size(0, 20);
+            WordLength.Size = new Size(44, 20);
             WordLength.TabIndex = 5;
+            WordLength.Text = "temp";
             // 
             // Form2
             // 

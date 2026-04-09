@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using wordle_analogue.Properties;
 
 namespace wordle_analogue
 {
@@ -23,12 +24,11 @@ namespace wordle_analogue
         private Bitmap alphabetBuffer;
         private Image AlphabetImage;
         private Dictionary<char, AlphabetLetter> alphabetLetters;
-        private string alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя012";
+        private string alphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
         public Form2()
         {
             Directory.CreateDirectory("last_game"); // Создаем директорию last_game, если ее еще не было
             InitializeComponent();
-
             WordLength.Text = $"Длина загаданного слова: {GuessWord.Word.Length}";
 
             offset = 50; // Задаем оффсет для создания расстояния между квадратами
@@ -150,18 +150,20 @@ namespace wordle_analogue
             DateTime tempTime = DateTime.Now; // Получаем текущее время системы
             string now = tempTime.ToString(culture).Replace(':', '-'); // Переводим его в строку, меняем двоеточия на -
                                                                        // чтобы можно было сохранить картинку
-            buffer.Save($"last_game/{now}.png"); // Сохраняем картинку
-            using (Graphics g = Graphics.FromImage(alphabetBuffer))
+            if (grid_param != 0)
             {
-                g.DrawImage(AlphabetImage, 0, 0);
+                buffer.Save($"last_game/{now}.png"); // Сохраняем картинку
+                using (Graphics g = Graphics.FromImage(alphabetBuffer))
+                {
+                    g.DrawImage(AlphabetImage, 0, 0);
+                }
+                alphabetBuffer.Save($"last_game/{now}-alphabet.png");
             }
-            alphabetBuffer.Save($"last_game/{now}-alphabet.png");
             buffer?.Dispose(); // Избавляеся от буферов
             alphabetBuffer?.Dispose();
             AlphabetImage?.Dispose();
             base.OnFormClosing(e);
         }
-
 
         // Метод для обработки событий нажатия кнопок
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -205,7 +207,9 @@ namespace wordle_analogue
             {
                 MessageBox.Show("Данного слова нет в словаре");
             }
-            
+
+            if (grid_param > GuessWord.Word.Length && GuessWord.IsRandom == true)
+                MessageBox.Show($"Загаданное слово было: {GuessWord.Word}");
         }
     }
 }

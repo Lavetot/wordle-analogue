@@ -1,16 +1,19 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using wordle_analogue.Properties;
 
 namespace wordle_analogue
 {
     // Основной класс игры
     public static class GuessWord
     {
+        public static bool IsRandom = false;
         public static string Word; // Поле Word, в которое мы сохраняем загаданное слово с первой формы
-        public static readonly List<string> Dict = File.ReadLines("dictionary_utf-8.txt").ToList();
-        public static readonly List<string> Dict_5_6 = File.ReadLines("dictionary_5-6_utf-8.txt").ToList();
+        public static readonly List<string> Dict = Resources.dictionary_utf_8.Split().ToList();
+        public static readonly List<string> Dict_5_6 = Resources.dictionary_5_6_utf_8.Split('\n').ToList();
 
         // Метод для сравнения загаданного слова и некоторого слова
         public static Color[]? ColorsForChars(string guessedWord)
@@ -54,7 +57,8 @@ namespace wordle_analogue
         public static void PickRandomWord()
         {
             Random random = new Random();
-            Word = Dict_5_6[random.Next(0, Dict_5_6.Count)];
+            Word = Dict_5_6[random.Next(0, Dict_5_6.Count)].TrimEnd();
+            IsRandom = true;
         }
     }
 }
